@@ -4,26 +4,28 @@ document.addEventListener('DOMContentLoaded',function() {
     // Example: Manipulating DOM elements
  
 
-    let appointment = document.querySelector('.appointment'); // Assuming you have a button with id "appointmentButton" in your HTML
+    let appointment = document.querySelector('.appointment'); 
+    let master = document.querySelector('.master'); // Assuming you have a button with id "appointmentButton" in your HTML
+    let elastic = document.querySelector('.elastic'); // Assuming you have a button with id "appointmentButton" in your HTML
+    let patient = document.querySelector('.patient'); // Assuming you have a button with id "appointmentButton" in your HTML
+    // Assuming you have a button with id "appointmentButton" in your HTML
     let display = document.querySelector('.ans');
 
-    async function showlogs(){
+    async function showlogs(service){
         console.log("shologs");
         
-        let output=await logging();
+        await logging(service);
         
-        console.log("output :",output);
-        display.innerText=output;
     }
-    async function logging(){
+    async function logging(service){
       
         try {
-            let response = await fetch('http://127.0.0.1:5000/');
+            let response = await fetch(`http://127.0.0.1:5000/api/${service}`);
     
             if (!response.body) {
                 console.error('Response body is not readable.');
                 return;
-            }
+            } 
     
             const reader = response.body.getReader();
     
@@ -37,6 +39,7 @@ document.addEventListener('DOMContentLoaded',function() {
     
                 const chunk = new TextDecoder('utf-8').decode(value);
                 display.innerText += chunk; // Append the chunk to the display element
+                console.log(chunk);
             }
         } catch (error) {
             console.error('Error fetching API:', error);
@@ -46,7 +49,24 @@ document.addEventListener('DOMContentLoaded',function() {
     
 
     appointment.addEventListener('click', () => {
-        showlogs();
+        display.innerText="";
+
+        showlogs("appointment");
+    });
+    master.addEventListener('click', () => {
+        display.innerText="";
+
+        showlogs("master");
+    });
+    elastic.addEventListener('click', () => {
+        display.innerText="";
+
+        showlogs("elastic");
+    });
+    patient.addEventListener('click', () => {
+        display.innerText="";
+
+        showlogs("patient");
     });
     
     // logging();
